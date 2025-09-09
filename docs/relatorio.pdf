@@ -1,0 +1,2 @@
+#Baixar a imagem do PostgreSQL
+docker pull postgres:15
