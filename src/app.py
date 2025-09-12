@@ -41,7 +41,7 @@ st.sidebar.header("Filtros")
 devices = st.sidebar.multiselect(
     "Selecione dispositivos",
     options=df_full['device_id'].unique(),
-    default=df_full['device_id'].unique()
+    default=list(df_full['device_id'].unique()) 
 )
 
 # Filtro de datas (garantindo que sempre exista intervalo válido)
@@ -89,37 +89,24 @@ st.plotly_chart(fig_avg, use_container_width=True)
 # ----------------- Gráfico 2: Leituras por Hora -----------------
 # Faço a contagem de leituras agrupadas por hora do dia
 st.subheader("Contagem de leituras por hora do dia")
-df_filtered["hora"] = df_filtered["reading_time"].dt.hour
-df_leituras_hora = df_filtered.groupby("hora")["id"].count().reset_index()
-df_leituras_hora.rename(columns={"id": "contagem"}, inplace=True)
+if not df_filtered.empty:
+    df_filtered["hora"] = df_filtered["reading_time"].dt.hour
+    df_leituras_hora = df_filtered.groupby("hora")["id"].count().reset_index()
+    df_leituras_hora.rename(columns={"id": "contagem"}, inplace=True)
 
-fig_hour = px.bar(
-    df_leituras_hora,
-    x='hora',
-    y='contagem',
-    title="Leituras por hora",
-    labels={'hora': 'Hora do dia', 'contagem': 'Quantidade de leituras'}
-)
-st.plotly_chart(fig_hour, use_container_width=True)
+    fig_hour = px.bar(
+        df_leituras_hora,
+        x='hora',
+        y='contagem',
+        title="Leituras por hora",
+        labels={'hora': 'Hora do dia', 'contagem': 'Quantidade de leituras'}
+    )
+    st.plotly_chart(fig_hour, use_container_width=True)
+else:
+    st.warning("Nenhum dado disponível para gerar o gráfico de leituras por hora.")
 
 # ----------------- Gráfico 3: Temperatura Máx/Min -----------------
 # Aqui mostro a máxima e mínima por dia
 st.subheader("Temperatura máxima e mínima por dia")
-df_temp_dia = df_filtered.groupby(df_filtered["reading_time"].dt.date)["temperature"].agg(
-    temp_max="max", temp_min="min"
-).reset_index().rename(columns={"reading_time": "data"})
-
-fig_temp = px.line(
-    df_temp_dia,
-    x='data', 
-    y=['temp_max', 'temp_min'],
-    title="Temperatura Máx/Min por dia",
-    labels={'data': 'Data', 'value': 'Temperatura', 'variable': 'Métrica'}
-)
-st.plotly_chart(fig_temp, use_container_width=True)
-
-# ----------------- Tabela -----------------
-# No final mostro uma amostra dos dados filtrados
-st.subheader("Visualização de dados filtrados")
-st.dataframe(df_filtered.head(100))
-
+if not df_filtered.empty:
+    df_temp_dia = df_filtered.groupby(df_filtered["reading_time"].dt.date)["t]()_]()]"]
